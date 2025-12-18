@@ -20,18 +20,14 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        Category::create([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        Category::create($validated);
 
-        return redirect()->route('categories.index')
-                         ->with('success', 'Categoría creada correctamente.');
+        return redirect()->route('categories.index');
     }
 
     public function edit(Category $category)
@@ -41,30 +37,25 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        $category->update([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        $category->update($validated);
 
-        return redirect()->route('categories.index')
-                         ->with('success', 'Categoría actualizada correctamente.');
+        return redirect()->route('categories.index');
     }
 
     public function destroy(Category $category)
     {
         if ($category->products()->count() > 0) {
             return redirect()->route('categories.index')
-                             ->with('error', 'No se puede eliminar la categoría porque tiene productos asociados.');
+                ->with('error', 'No se puede eliminar la categoría porque tiene productos asociados.');
         }
 
         $category->delete();
 
-        return redirect()->route('categories.index')
-                         ->with('success', 'Categoría eliminada correctamente.');
+        return redirect()->route('categories.index');
     }
 }

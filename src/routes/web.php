@@ -3,40 +3,24 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SupplierController;
 
+Route::get('/', function () {
+    return redirect()->route('categories.index');
+});
 
-
-// 1. Mostrar lista (Index)
-Route::get('/categories', [CategoryController::class, 'index'])
-    ->name('categories.index');
-
-// 2. Formulario de creación (Create)
-// ¡IMPORTANTE!: Esta ruta debe ir ANTES de la ruta 'show' /{category}
-Route::get('/categories/create', [CategoryController::class, 'create'])
-    ->name('categories.create');
-
-// 3. Guardar en base de datos (Store)
-Route::post('/categories', [CategoryController::class, 'store'])
-    ->name('categories.store');
-
-// 4. Mostrar un recurso específico (Show)
-Route::get('/categories/{category}', [CategoryController::class, 'show'])
-    ->name('categories.show');
-
-// 5. Formulario de edición (Edit)
-Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])
-    ->name('categories.edit');
-
-// 6. Actualizar recurso (Update)
-Route::put('/categories/{category}', [CategoryController::class, 'update'])
-    ->name('categories.update');
-
-// 7. Eliminar recurso (Destroy)
-Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])
-    ->name('categories.destroy');
-
+Route::resource('categories', CategoryController::class);
 Route::resource('products', ProductController::class);
 
-Route::get('/', fn() => view('welcome'));
+Route::get('/warehouse', [WarehouseController::class, 'index'])->name('warehouse.index');
+Route::post('/warehouse/category', [WarehouseController::class, 'storeCategory'])->name('warehouse.storeCategory');
+Route::put('/warehouse/category/{category}', [WarehouseController::class, 'updateCategory'])->name('warehouse.updateCategory');
+Route::delete('/warehouse/category/{category}', [WarehouseController::class, 'destroyCategory'])->name('warehouse.destroyCategory');
+Route::post('/warehouse/product', [WarehouseController::class, 'storeProduct'])->name('warehouse.storeProduct');
+Route::put('/warehouse/product/{product}', [WarehouseController::class, 'updateProduct'])->name('warehouse.updateProduct');
+Route::delete('/warehouse/product/{product}', [WarehouseController::class, 'destroyProduct'])->name('warehouse.destroyProduct');
 
-
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');

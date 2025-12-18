@@ -6,22 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('idCategory');
-            $table->string('label');
-            $table->decimal('price', 10, 2);
+            $table->foreignId('category_id')->constrained()->onDelete('restrict');
+            $table->string('name');
+            $table->decimal('price', 8, 2);
             $table->integer('stock');
             $table->timestamps();
-
-            $table->foreign('idCategory')
-                  ->references('id')
-                  ->on('categories')
-                  ->onDelete('restrict');
         });
-   }
+    }
 
     public function down(): void
     {
